@@ -9,7 +9,7 @@
 	mutator_actions_to_remove = list(
 		/datum/action/xeno_action/activable/pounce/base_prae_dash,
 		/datum/action/xeno_action/activable/prae_acid_ball,
-		/datum/action/xeno_action/activable/spray_acid/base_prae_spray_acid,
+		/datum/action/xeno_action/activable/spray_acid/base_prae_spray_acid
 	)
 	mutator_actions_to_add = list(
 		/datum/action/xeno_action/activable/spray_acid/prae_warden,
@@ -44,8 +44,9 @@
 
 	// Config
 	var/internal_hitpoints_max = 350
-	var/internal_hitpoints_per_attack = 50
-	var/internal_hp_per_life = 5
+	var/internal_hitpoints_per_melee_attack = 70
+	var/internal_hitpoints_per_ranged_attack = 20
+	var/internal_hp_per_life = 2
 
 	// State
 	var/internal_hitpoints = 0
@@ -76,11 +77,11 @@
 /datum/behavior_delegate/praetorian_warden/melee_attack_additional_effects_self()
 	..()
 
-	add_internal_hitpoints(internal_hitpoints_per_attack)
+	add_internal_hitpoints(internal_hitpoints_per_melee_attack)
 
 /datum/behavior_delegate/praetorian_warden/ranged_attack_additional_effects_target(var/atom/A)
-	if(ismob(A))
-		add_internal_hitpoints(internal_hitpoints_per_attack)
+	if(ismob(A) && isliving(A))
+		add_internal_hitpoints(internal_hitpoints_per_ranged_attack)
 
 /datum/behavior_delegate/praetorian_warden/proc/add_internal_hitpoints(amount)
 	if (amount > 0)
