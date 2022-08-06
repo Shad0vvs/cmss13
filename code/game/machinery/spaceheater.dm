@@ -25,6 +25,9 @@
 	if(open)
 		overlays  += "sheater-open"
 
+/obj/structure/machinery/space_heater/radiator/update_icon()
+	return
+
 /obj/structure/machinery/space_heater/examine(mob/user)
 	..()
 	to_chat(user, "The heater is [on ? "on" : "off"] and the hatch is [open ? "open" : "closed"].")
@@ -174,9 +177,6 @@
 	desc = "It's a radiator. It heats the room through convection with hot water."
 	icon_state = "radiator"
 	anchored = TRUE
-
-/obj/structure/machinery/space_heater/radiator/update_icon()
-	return
 
 /obj/structure/machinery/space_heater/radiator/red
 	name = "radiator"
