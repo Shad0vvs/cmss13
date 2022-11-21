@@ -207,6 +207,7 @@ var/list/ob_type_fuel_requirements
 	var/turf/target = locate(T.x + inaccurate_fuel * round(rand(-3,3), 1), T.y + inaccurate_fuel * round(rand(-3,3), 1), T.z)
 	if(user)
 		tray.warhead.source_mob = user
+		track_ob_kills(user)
 
 	tray.warhead.warhead_impact(target)
 
@@ -220,6 +221,18 @@ var/list/ob_type_fuel_requirements
 	tray.update_icon()
 
 	update_icon()
+
+/obj/structure/orbital_cannon/proc/track_ob_kills(var/mob/source_mob)
+	if(source_mob)
+		var/current_kills = source_mob.life_kills_total
+		addtimer(CALLBACK(src, .proc/report_ob_kills, source_mob, current_kills), 30 SECONDS)
+	
+
+/obj/structure/orbital_cannon/proc/report_ob_kills(var/mob/source_mob, current_kills)
+	if(source_mob)
+		var/new_kills = source_mob.life_kills_total
+		var/final_kills = abs(current_kills - new_kills)
+		shipwide_ai_announcement("Calculated orbital strike damage: [final_kills] life signs neutralized.")
 
 /obj/structure/orbital_tray
 	name = "loading tray"
