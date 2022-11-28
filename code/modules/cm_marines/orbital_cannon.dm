@@ -489,6 +489,29 @@ var/list/ob_type_fuel_requirements
 	new /obj/effect/overlay/temp/blinking_laser (loc)
 	addtimer(CALLBACK(GLOBAL_PROC, .proc/cell_explosion, loc, explosion_power, explosion_falloff, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, create_cause_data(initial(name), source_mob)), 1 SECONDS)
 
+/obj/structure/ob_ammo/warhead/acid
+	name = "\improper Acid orbital warhead"
+	warhead_kind = "acid"
+	icon_state = "ob_warhead_2"
+	color = "#00FF00"
+	var/clear_power = 0
+	var/clear_falloff = 0
+	var/clear_delay = 0
+	var/distance = 18
+	var/damage = 300
+
+/obj/structure/ob_ammo/warhead/acid/warhead_impact(turf/target)
+	. = ..()
+	if (!.)
+		return
+
+	new /obj/effect/overlay/temp/blinking_laser (target)
+	sleep(10)
+	var/datum/cause_data/cause_data = create_cause_data(initial(name), source_mob)
+	cell_explosion(target, clear_power, clear_falloff, EXPLOSION_FALLOFF_SHAPE_LINEAR, null, cause_data) //break shit around
+	sleep(clear_delay)
+	acid_ob(target, distance, damage)
+
 /obj/structure/ob_ammo/ob_fuel
 	name = "solid fuel"
 	icon_state = "ob_fuel"

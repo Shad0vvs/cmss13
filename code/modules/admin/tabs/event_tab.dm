@@ -813,7 +813,7 @@
 	if(!check_rights(R_ADMIN))
 		return
 
-	var/list/firemodes = list("Standard Warhead", "Custom HE", "Custom Cluster", "Custom Incendiary")
+	var/list/firemodes = list("Standard Warhead", "Custom HE", "Custom Cluster", "Custom Incendiary", "Custom Acid")
 	var/mode = tgui_input_list(usr, "Select fire mode:", "Fire mode", firemodes)
 	// Select the warhead.
 	var/obj/structure/ob_ammo/warhead/warhead
@@ -890,7 +890,25 @@
 			statsmessage = "Custom Incendiary OB ([OBShell.name]) Stats from [key_name(usr)]: Clear Power: [OBShell.clear_power], Clear Falloff: [OBShell.clear_falloff], Clear Delay: [OBShell.clear_delay], Fire Distance: [OBShell.distance], Fire Duration: [OBShell.fire_level], Fire Strength: [OBShell.burn_level]."
 			warhead = OBShell
 			qdel(OBShell)
-
+		if("Custom Acid")
+			var/obj/structure/ob_ammo/warhead/acid/OBShell = new
+			OBShell.name = input("What name should the warhead have?", "Set name", "Acid Glob")
+			if(!OBShell.name) return//null check to cancel
+			OBShell.clear_power = tgui_input_number(src, "How much explosive power should the wall clear blast have?", "Set clear power", 0)
+			if(isnull(OBShell.clear_power)) return
+			OBShell.clear_falloff = tgui_input_number(src, "How much falloff should the wall clear blast have?", "Set clear falloff", 0)
+			if(isnull(OBShell.clear_falloff)) return
+			OBShell.clear_delay = tgui_input_number(src, "How much delay should the clear blast have?", "Set clear delay", 0)
+			if(isnull(OBShell.clear_delay)) return
+			OBShell.distance = tgui_input_number(src, "How many tiles radius should the acid be? (Max 30)", "Set acid radius", 18)
+			if(isnull(OBShell.distance)) return
+			if(OBShell.distance > 30)
+				OBShell.distance = 30
+			OBShell.damage = tgui_input_number(src, "How damaging should the acid be?", "Set acid strength", 300)
+			if(isnull(OBShell.damage)) return
+			statsmessage = "Custom Incendiary OB ([OBShell.name]) Stats from [key_name(usr)]: Clear Power: [OBShell.clear_power], Clear Falloff: [OBShell.clear_falloff], Acid Radius: [OBShell.distance], Acid Damage: [OBShell.damage]."
+			warhead = OBShell
+			qdel(OBShell)
 	if(custom)
 		if(alert(usr, statsmessage, "Confirm Stats", "Yes", "No") == "No") return
 		message_staff(statsmessage)
