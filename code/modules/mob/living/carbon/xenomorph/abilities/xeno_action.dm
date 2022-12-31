@@ -152,6 +152,11 @@
 	if(hidden)
 		return // There's no where we want a hidden action to be selectable right?
 	var/mob/living/carbon/Xenomorph/xeno = owner
+	if(owner.client?.prefs && owner.client?.prefs?.toggle_prefs & TOGGLE_SMART_ABILITIES)
+		if(charges != NO_ACTION_CHARGES)
+			to_chat(xeno, SPAN_INFO("It has [charges] uses left."))
+		if(charge_time)
+			start_charging_ability()
 	if(xeno.selected_ability == src)
 		if(xeno.deselect_timer > world.time)
 			return // We clicked the same ability in a very short time
